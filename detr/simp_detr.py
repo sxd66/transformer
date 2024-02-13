@@ -9,7 +9,7 @@ class DETR(nn.Module):
         super(DETR, self).__init__()
 
 
-        self.backbone = nn.Sequential(*list(resnet50(pretrained=False).children())[:-2])
+        self.backbone = nn.Sequential(*list(resnet50(pretrained=True).children())[:-2])
         self.conv = nn.Conv2d(2048, hidden_dim, 1)
         self.transformer = nn.Transformer(hidden_dim, nheads,
         num_encoder_layers, num_decoder_layers)
