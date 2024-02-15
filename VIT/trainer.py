@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 from collections import OrderedDict
 import getpass
-from example import vit_base_patch16_224
+from example import vit_base_patch16_224,VisionTransformer
 from tensorboardX import SummaryWriter
 from dataset import dataload
 from utils import (
@@ -24,7 +24,14 @@ class trainer():
     def __init__(self,train_load,val_load,experiment_name):
         self.train_load=train_load
         self.val_load=val_load
-        self.model=vit_base_patch16_224()
+        self.model=VisionTransformer(img_size=32,
+                              patch_size=4,
+                              embed_dim=48,
+                              depth=8,
+                            mlp_ratio=2,
+                              num_heads=8,
+                              representation_size=None,
+                              num_classes=100)
         self.optimizer = self.init_optimizer(0.00001,0.9)
         self.best_acc = -1
 
@@ -145,8 +152,8 @@ class trainer():
 
 
 train_dataload,val_dataload=dataload(64,64)
-x=trainer(train_dataload,val_dataload,"sxd")
-x.train(resume=True)
+x=trainer(train_dataload,val_dataload,"differ")
+x.train(resume=False)
 
 
 
