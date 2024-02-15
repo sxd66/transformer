@@ -58,8 +58,8 @@ class trainer():
         if resume:
             state = load_checkpoint(os.path.join(self.log_path, "latest"))
             epoch = state["epoch"] + 1
+            self.optimizer.load_state_dict(state["optimizer"])
             self.model.load_state_dict(state["model"])
-
             self.best_acc = state["best_acc"]
 
         while epoch<self.maxepoch :
@@ -113,6 +113,7 @@ class trainer():
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         image=image.float().to(device)
         target = target.to(device)
+
         self.model.to(device)
 
 
