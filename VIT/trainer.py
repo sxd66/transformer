@@ -32,7 +32,7 @@ class trainer():
                               num_heads=8,
                               representation_size=None,
                               num_classes=100)
-        self.optimizer = self.init_optimizer(0.00001,0.9)
+        self.optimizer = self.init_optimizer(0.0005,0.9)
         self.best_acc = -1
 
         self.loss=nn.CrossEntropyLoss()
@@ -65,7 +65,7 @@ class trainer():
         if resume:
             state = load_checkpoint(os.path.join(self.log_path, "latest"))
             epoch = state["epoch"] + 1
-            self.optimizer.load_state_dict(state["optimizer"])
+
             self.model.load_state_dict(state["model"])
             self.best_acc = state["best_acc"]
 
@@ -153,7 +153,7 @@ class trainer():
 
 train_dataload,val_dataload=dataload(64,64)
 x=trainer(train_dataload,val_dataload,"differ")
-x.train(resume=False)
+x.train(resume=True)
 
 
 
