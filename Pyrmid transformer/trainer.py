@@ -26,7 +26,7 @@ class trainer():
         self.train_load=train_load
         self.val_load=val_load
         self.model=Rich_trans()
-        self.optimizer = self.init_optimizer(0.0005,0.9)
+        self.optimizer = self.init_optimizer(0.00005,0.9)
         self.best_acc = -1
 
         self.loss=nn.CrossEntropyLoss()
