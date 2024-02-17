@@ -6,8 +6,8 @@ import torch.nn as nn
 import torch.optim as optim
 from collections import OrderedDict
 import getpass
-from example import vit_base_patch16_224,VisionTransformer
 
+from model import Pyr_transform,Rich_trans
 from tensorboardX import SummaryWriter
 from dataset import dataload
 from utils import (
@@ -25,14 +25,7 @@ class trainer():
     def __init__(self,train_load,val_load,experiment_name):
         self.train_load=train_load
         self.val_load=val_load
-        self.model=VisionTransformer(img_size=32,
-                              patch_size=4,
-                              embed_dim=48,
-                              depth=8,
-                            mlp_ratio=2,
-                              num_heads=8,
-                              representation_size=None,
-                              num_classes=100)
+        self.model=Rich_trans()
         self.optimizer = self.init_optimizer(0.0005,0.9)
         self.best_acc = -1
 
@@ -139,21 +132,23 @@ class trainer():
         train_meters["losses"].update(lost.cpu().detach().numpy().mean(), batch_size)
         train_meters["top1"].update(acc1[0], batch_size)
         train_meters["top5"].update(acc5[0], batch_size)
+        learning_rate = self.optimizer.param_groups[0]['lr']
         # print info
-        msg = "Epoch:{}| Time(data):{:.3f}| Time(train):{:.3f}| Loss:{:.4f}| Top-1:{:.3f}| Top-5:{:.3f}".format(
+        msg = "Epoch:{}| Time(data):{:.3f}| Time(train):{:.3f}| Loss:{:.4f}| Top-1:{:.3f}| Top-5:{:.3f}| Lr:{}".format(
             epoch,
             train_meters["data_time"].avg,
             train_meters["training_time"].avg,
             train_meters["losses"].avg,
             train_meters["top1"].avg,
             train_meters["top5"].avg,
+            learning_rate
         )
         return msg
 
 
 
 train_dataload,val_dataload=dataload(64,64)
-x=trainer(train_dataload,val_dataload,"differ")
+x=trainer(train_dataload,val_dataload,"Rich_trans")
 x.train(resume=True)
 
 
